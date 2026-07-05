@@ -1,24 +1,33 @@
 import { Router } from 'express';
-import { userController } from './user.controller';
-import { validateRequest } from '../../middlewares/validateRequest';
-import { createUserZodSchema } from './user.validation';
 import { checkAuth } from '../../middlewares/checkAuth';
-import { UserRole } from './user.interface';
+import { validateRequest } from '../../middlewares/validateRequest';
+import { userController } from './user.controller';
+import { registerSchema, updateUserZodSchema } from './user.validation';
+import { UserRole } from './user.constants';
 
-
-// Initialize Express router for user routes
 const router = Router();
 
-
-router.patch('/update/:id', userController.updateUser);
-router.delete('/delete/:id', userController.deleteUser);
-router.get('/:id', userController.getUserById);
-
-router.get(
-  '/',
-  checkAuth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  userController.getAllUser,
+router.post(
+  '/register',
+  validateRequest(registerSchema),
+  userController.createUser,
 );
 
-// Export router for use in main routes
+router.get('/', checkAuth(UserRole.ADMIN), userController.getAllUsers);
+
+router.get(
+  '/:id',
+  checkAuth(UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE),
+  userController.getSingleUser,
+);
+
+router.patch(
+  '/:id',
+  checkAuth(UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE),
+  validateRequest(updateUserZodSchema),
+  userController.updateUser,
+);
+
+router.delete('/:id', checkAuth(UserRole.ADMIN), userController.deleteUser);
+
 export const userRoutes = router;

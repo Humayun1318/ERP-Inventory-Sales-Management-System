@@ -6,7 +6,8 @@ import { envVars } from '../config/env';
 import AppError from '../errorHelpers/AppError';
 import { verifyToken } from '../utils/jwt';
 import { User } from '../modules/user/user.models';
-import { validateUserStatus } from '../utils/validateUserStatus';
+import { validateUserStatus } from '../modules/user/user.utils';
+
 
 
 export const checkAuth =

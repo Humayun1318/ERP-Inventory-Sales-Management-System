@@ -2,26 +2,15 @@ import { NextFunction, Request, Response } from 'express';
 import catchAsync from '../../utils/catchAsync';
 import { authService } from './auth.service';
 import { sendResponse } from '../../utils/sendResponse';
-import httpStatus from 'http-status-codes';
 import { setAuthCookie } from '../../utils/setAuthCookie';
 import { envVars } from '../../config/env';
 import { JwtPayload } from 'jsonwebtoken';
 import passport from 'passport';
 import AppError from '../../errorHelpers/AppError';
 import { createUserTokens } from '../../utils/userTokens';
-import { validateUserStatus } from '../../utils/validateUserStatus';
+import { HTTP_STATUS_CODE } from '../../utils/HTTP_STATUS_CODE';
 
-const createUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await authService.createUser(req.body);
 
-  // Send success response to client with created user data
-  sendResponse(res, {
-    statusCode: httpStatus.CREATED,
-    success: true,
-    message: 'User created successfully',
-    data: result,
-  });
-});
 
 const credentialsLogin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -54,7 +43,7 @@ const credentialsLogin = catchAsync(
 
       sendResponse(res, {
         success: true,
-        statusCode: httpStatus.OK,
+        statusCode: HTTP_STATUS_CODE.OK,
         message: 'User Logged In Successfully',
         data: {
           accessToken: userTokens.accessToken,
@@ -78,7 +67,7 @@ const getNewAccessTokenUsingRefreshToken = catchAsync(
 
     sendResponse(res, {
       success: true,
-      statusCode: httpStatus.OK,
+      statusCode: HTTP_STATUS_CODE.OK,
       message: 'New Access Token Retrived Successfully',
       data: tokenInfo,
     });
@@ -99,7 +88,7 @@ const logout = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     success: true,
-    statusCode: httpStatus.OK,
+    statusCode: HTTP_STATUS_CODE.OK,
     message: 'User Logged Out Successfully',
     data: null,
   });
@@ -111,7 +100,7 @@ const changePassword = catchAsync(
 
     sendResponse(res, {
       success: true,
-      statusCode: httpStatus.OK,
+      statusCode: HTTP_STATUS_CODE.OK,
       message: 'Password Changed Successfully',
       data: null,
     });
@@ -181,20 +170,11 @@ const googleCallbackController = catchAsync(
     )(req, res, next);
   },
 );
-const getAllAuth = catchAsync(async (req: Request, res: Response) => { });
-const getAuthById = catchAsync(async (req: Request, res: Response) => { });
-const updateAuth = catchAsync(async (req: Request, res: Response) => { });
-const deleteAuth = catchAsync(async (req: Request, res: Response) => { });
 
 export const authController = {
-  createUser,
-  createAuth: credentialsLogin,
+  credentialsLogin,
   getNewAccessTokenUsingRefreshToken,
   logout,
   changePassword,
   googleCallbackController,
-  getAllAuth,
-  getAuthById,
-  updateAuth,
-  deleteAuth,
 };

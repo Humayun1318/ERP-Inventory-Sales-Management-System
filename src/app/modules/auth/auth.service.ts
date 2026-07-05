@@ -1,55 +1,12 @@
 import AppError from '../../errorHelpers/AppError';
+import { HTTP_STATUS_CODE } from '../../utils/HTTP_STATUS_CODE';
+
 import {
   createNewAccessTokenByRefreshToken,
-  createUserTokens,
 } from '../../utils/userTokens';
-import { validateUserStatus } from '../../utils/validateUserStatus';
 import { AuthProvider, IUser } from '../user/user.interface';
 import { User } from '../user/user.models';
-import httpStatus from 'http-status-codes';
-import { JwtPayload } from 'jsonwebtoken';
 
-const createUser = async (payload: IUser) => {
-  const { email } = payload;
-
-  // check if user already exists giving me with password field
-  const existingUser = await User.findByEmail(email);
-
-  if (existingUser) {
-    throw new AppError(
-      httpStatus.CONFLICT,
-      'User already exists with this email',
-    );
-  }
-
-  // Normalize auths: set providerId to email
-  payload.auths = payload?.auths?.map(() => ({
-    provider: AuthProvider.LOCAL,
-    providerId: email,
-  })) || [
-    {
-      provider: AuthProvider.LOCAL,
-      providerId: email,
-    },
-  ];
-
-  // //check if CREDENTIALS provider exists
-  const hasCredentialsProvider = payload.auths.some(
-    (auth) => auth.provider === AuthProvider.LOCAL,
-  );
-
-  // local provider must have password
-  if (hasCredentialsProvider && !payload.password) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      'Password is required for credentials authentication',
-    );
-  }
-
-  // create user
-  const user = await User.create(payload);
-  return user;
-};
 
 // const createAuth = async (payload: Partial<IUser>) => {
 //   const { email, password } = payload;
@@ -86,7 +43,7 @@ const createUser = async (payload: IUser) => {
 const getNewAccessTokenUsingRefreshToken = async (refreshToken: string) => {
   if (!refreshToken) {
     throw new AppError(
-      httpStatus.BAD_REQUEST,
+      HTTP_STATUS_CODE.BAD_REQUEST,
       'No refresh token recieved from cookies',
     );
   }
@@ -109,12 +66,12 @@ const changePassword = async (
   const { oldPassword, newPassword } = payload;
   const user = await User.findByEmail(userEmail);
   if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+    throw new AppError(HTTP_STATUS_CODE.NOT_FOUND, 'User not found');
   }
 
   const isOldPasswordMatch = await user.comparePassword(oldPassword);
   if (!isOldPasswordMatch) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'Old Password does not match');
+    throw new AppError(HTTP_STATUS_CODE.UNAUTHORIZED, 'Old Password does not match');
   }
 
   user.password = newPassword;
@@ -123,18 +80,8 @@ const changePassword = async (
   return;
 };
 
-const getAllAuth = async () => {};
-const getAuthById = async () => {};
-const updateAuth = async () => {};
-const deleteAuth = async () => {};
 
 export const authService = {
-  createUser,
-  // createAuth,
   getNewAccessTokenUsingRefreshToken,
   changePassword,
-  getAllAuth,
-  getAuthById,
-  updateAuth,
-  deleteAuth,
 };

@@ -7,7 +7,9 @@ import {
 } from 'passport-google-oauth20';
 import { User } from '../modules/user/user.models';
 import { envVars } from './env';
-import { AccountStatus, AuthProvider, UserRole } from '../modules/user/user.interface';
+import { AuthProvider } from '../modules/user/user.interface';
+import { UserRole } from '../modules/user/user.constants';
+
 
 passport.use(
   new LocalStrategy(
@@ -40,20 +42,12 @@ passport.use(
         // ─────────────────────────────
         // STATUS CHECK (model method)
         // ─────────────────────────────
-        if (!user.isAccountActive()) {
+        if (!user.isLoginAllowed()) {
           return done(null, false, {
-            message: `User is ${user.status}`,
+            message: `User is not allowed to login.`,
           });
         }
 
-        // ─────────────────────────────
-        // SOFT DELETE CHECK 
-        // ─────────────────────────────
-        // if ((user as any).isDeleted) {
-        //   return done(null, false, {
-        //     message: 'User is deleted',
-        //   });
-        // }
 
         // ─────────────────────────────
         //  GOOGLE + PASSWORD CONFLICT LOGIC
@@ -78,7 +72,6 @@ passport.use(
           });
         }
 
-        user.lastLogin = new Date();
         await user.save();
 
         // ─────────────────────────────
@@ -129,11 +122,11 @@ passport.use(
           });
         }
 
-        if (state && state?.role && ![UserRole.SEEKER, UserRole.EMPLOYER].includes(state.role)) {
+        if (state && state?.role && ![UserRole.EMPLOYEE, UserRole.MANAGER].includes(state.role)) {
            return done("Invalid role");
         }
 
-        const role = state?.role || UserRole.SEEKER;
+        const role = state?.role || UserRole.EMPLOYEE;
 
         let user = await User.findByEmail(email);
 
@@ -149,9 +142,9 @@ passport.use(
           // }
 
           //  inactive / blocked via model method
-          if (!user.isAccountActive()) {
+          if (!user.isLoginAllowed()) {
             return done(null, false, {
-              message: `User is ${user.status}`,
+              message: `User is not allowed to login.`,
             });
           }
 
@@ -164,7 +157,6 @@ passport.use(
           }
 
           // update login info
-          user.lastLogin = new Date();
           await user.save();
 
           return done(null, user);
@@ -175,18 +167,15 @@ passport.use(
         // ─────────────────────────────
         const newUser = await User.create({
           email,
-          name: profile.displayName,
-          avatar: profile.photos?.[0]?.value,
+          name: profile.displayName || "No Name",
           role,
-          status: AccountStatus.ACTIVE,
-          // isVerified: true,
+          isVerified: true,
           auths: [
             {
               provider: AuthProvider.GOOGLE,
               providerId: profile.id,
             },
           ],
-          lastLogin: new Date(),
         });
 
         return done(null, newUser);

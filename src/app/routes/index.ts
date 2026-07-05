@@ -19,7 +19,7 @@ export const router = Router();
 const moduleRoutes = [
   {
     // User management endpoints: /api/v1/users
-    path: '/users',
+    path: '/user',
     route: userRoutes,
   },
   {

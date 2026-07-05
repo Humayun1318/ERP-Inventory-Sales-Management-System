@@ -1,85 +1,51 @@
-import { Model, Types, Document } from 'mongoose';
+import { Document, Model, Types } from 'mongoose';
+import { UserRole } from './user.constants';
 
-// Enums for user roles
-export enum UserRole {
-  SUPER_ADMIN = 'super_admin',
-  ADMIN       = 'admin',
-  SEEKER      = 'seeker',
-  EMPLOYER    = 'employer',
-}
 
 // authProvider types
 export enum AuthProvider {
-  LOCAL  = 'local', 
-  GOOGLE = 'google',  
+  LOCAL = 'local',
+  GOOGLE = 'google',
 }
 
 // authentication providers
 export interface IAuthEntry {
-  provider:   AuthProvider;
+  provider: AuthProvider;
   providerId: string;
 }
 
-export enum AccountStatus {
-  ACTIVE    = 'active',     // সব কিছু ঠিক আছে, login করতে পারবে
-  INACTIVE  = 'inactive',   // account deactivated (soft-delete equivalent)
-  SUSPENDED = 'suspended',  // temporarily blocked, admin review pending
-  BANNED    = 'banned',     // permanently blocked
-}
-
-export interface IUser extends Document {
-  // ── Core Identity ────────────────────────────────
-  name:     string;
-  email:    string;
- 
+export interface IUser {
+  _id?: Types.ObjectId;
+  name: string;
+  email: string;
   password?: string;
- 
-  avatar?: string;
-  phone?: string;
- 
-  // ── Role & Auth ──────────────────────────────────
   role: UserRole;
-
   auths: IAuthEntry[];
- 
-  // ── Account Lifecycle ────────────────────────────
-  status:     AccountStatus;
   isVerified: boolean;
-  lastLogin?: Date;
- 
-  // ── Cross-module FK References ───────────────────
-  seekerProfileId?: Types.ObjectId;
-  companyId?:       Types.ObjectId;
-  subscriptionId?:  Types.ObjectId;
- 
-  // ── Timestamps (Mongoose auto-manages) ───────────
+  isActive: boolean;
+  isBlocked: boolean;
+  isDeleted: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
- 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// INSTANCE METHODS INTERFACE
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- 
-export interface IUserMethods {
+
+
+export type IUserUpdate = Partial<Pick<IUser, 'name' | 'role' | 'isActive' | 'isBlocked'>>;
+
+
+export interface IUserDocument extends IUser, Document {
+  _id: Types.ObjectId;
 
   comparePassword(candidatePassword: string): Promise<boolean>;
- 
-  isAccountActive(): boolean;
+  isLoginAllowed(): boolean;
   hasAuthProvider(provider: AuthProvider): boolean;
 }
- 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// STATIC METHODS INTERFACE (Model-level)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export interface IUserModel extends Model<IUser, {}, IUserMethods> {
-
-  // findByEmail — email দিয়ে user খোঁজে, password সহ (login এর জন্য)।
-  findByEmail(email: string): Promise<(IUser & IUserMethods) | null>;
- 
-  // findByGoogleId — Google auth provider এর providerId (Google ID) দিয়ে user খোঁজে।
-  findByGoogleId(googleId: string): Promise<(IUser & IUserMethods) | null>;
-
-  existsById(id: string): Promise<boolean>;
+// ---------------------------------------------------------------------------
+// Static methods on the Model constructor.
+// Defined here so TypeScript can resolve them when called as User.findByEmail().
+// ---------------------------------------------------------------------------
+export interface IUserModel extends Model<IUserDocument> {
+  findByEmail(email: string): Promise<IUserDocument | null>;
+  isEmailTaken(email: string, excludeUserId?: Types.ObjectId): Promise<boolean>;
 }

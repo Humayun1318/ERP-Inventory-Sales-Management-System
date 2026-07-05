@@ -1,30 +1,137 @@
+
 import AppError from '../../errorHelpers/AppError';
-import { AuthProvider, IUser } from './user.interface';
 import { User } from './user.models';
-import httpStatus from 'http-status-codes';
+import { AuthProvider, IUser, IUserUpdate } from './user.interface';
+import { USER_SEARCHABLE_FIELDS, UserRole } from './user.constants';
+import { QueryBuilder } from '../../builder/QueryBuilder';
+import { HTTP_STATUS_CODE } from '../../utils/HTTP_STATUS_CODE';
 
+const createUser = async (payload: IUser) => {
+  const { email } = payload;
 
+  // check if user already exists giving me with password field
+  const existingUser = await User.findByEmail(email);
 
-// Get all users (for admin)
-const getAllUser = async () => {
-  const users = await User.find().lean();
-  return users;
-};
-
-
-const getUserById = async (id: string) => {
-  const user = await User.findById(id).lean();
-  if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  if (existingUser) {
+    throw new AppError(
+      HTTP_STATUS_CODE.CONFLICT,
+      'User already exists with this email',
+    );
   }
+
+  // Normalize auths: set providerId to email
+  payload.auths = payload?.auths?.map(() => ({
+    provider: AuthProvider.LOCAL,
+    providerId: email,
+  })) || [
+    {
+      provider: AuthProvider.LOCAL,
+      providerId: email,
+    },
+  ];
+
+  // //check if CREDENTIALS provider exists
+  const hasCredentialsProvider = payload.auths.some(
+    (auth) => auth.provider === AuthProvider.LOCAL,
+  );
+
+  // local provider must have password
+  if (hasCredentialsProvider && !payload.password) {
+    throw new AppError(
+      HTTP_STATUS_CODE.BAD_REQUEST,
+      'Password is required for credentials authentication',
+    );
+  }
+
+  // create user
+  const user = await User.create(payload);
   return user;
 };
-const updateUser = async () => {};
-const deleteUser = async () => {};
+
+const getAllUsers = async (query: Record<string, string>) => {
+  const queryBuilder = new QueryBuilder(User.find({ isDeleted: false }), query);
+
+  const usersQuery = queryBuilder
+    .search(USER_SEARCHABLE_FIELDS)
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+
+  const [result, meta] = await Promise.all([
+    usersQuery.build().lean(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return { result, meta };
+};
+
+const getSingleUser = async (
+  targetId: string,
+  requesterId: string,
+  requesterRole: UserRole,
+) => {
+  if (requesterRole !== UserRole.ADMIN && requesterId !== targetId) {
+    throw new AppError(HTTP_STATUS_CODE.FORBIDDEN, 'You are not allowed to view this user');
+  }
+
+  const user = await User.findOne({ _id: targetId, isDeleted: false }).lean();
+
+  if (!user) {
+    throw new AppError(HTTP_STATUS_CODE.NOT_FOUND, 'User not found');
+  }
+
+  return user;
+};
+
+const updateUser = async (
+  targetId: string,
+  requesterId: string,
+  requesterRole: UserRole,
+  payload: IUserUpdate,
+) => {
+  const user = await User.findOne({ _id: targetId, isDeleted: false });
+
+  if (!user) {
+    throw new AppError(HTTP_STATUS_CODE.NOT_FOUND, 'User not found');
+  }
+
+  const isSelf = requesterId === targetId;
+
+  if (!isSelf && requesterRole !== UserRole.ADMIN) {
+    throw new AppError(HTTP_STATUS_CODE.FORBIDDEN, 'You are not allowed to update this user');
+  }
+
+  // Only Admin can change role / isActive / isBlocked
+  if (requesterRole !== UserRole.ADMIN) {
+    delete payload.role;
+    delete payload.isActive;
+    delete payload.isBlocked;
+  }
+
+  Object.assign(user, payload);
+  await user.save();
+
+  return user;
+};
+
+const deleteUser = async (targetId: string) => {
+  const user = await User.findOne({ _id: targetId, isDeleted: false });
+
+  if (!user) {
+    throw new AppError(HTTP_STATUS_CODE.NOT_FOUND, 'User not found');
+  }
+
+  user.isDeleted = true;
+  await user.save();
+
+  return null;
+};
 
 export const userService = {
-  getAllUser,
-  getUserById,
+  createUser,
+  getAllUsers,
+  getSingleUser,
   updateUser,
   deleteUser,
 };
