@@ -25,10 +25,6 @@ interface EnvConfig {
   JWT_REFRESH_SECRET: string; // Secret key for signing refresh tokens
   JWT_REFRESH_EXPIRES: string; // Expiration time for refresh tokens
 
-  // Super Admin User Credentials
-  SUPER_ADMIN_EMAIL: string;
-  SUPER_ADMIN_PASSWORD: string;
-
   // Google OAuth Configuration
   GOOGLE_CLIENT_ID: string;
   GOOGLE_CLIENT_SECRET: string;
@@ -58,8 +54,6 @@ const loadEnvVariables = (): EnvConfig => {
     'JWT_ACCESS_EXPIRES',
     'JWT_REFRESH_SECRET',
     'JWT_REFRESH_EXPIRES',
-    'SUPER_ADMIN_EMAIL',
-    'SUPER_ADMIN_PASSWORD',
     'EXPRESS_SESSION_SECRET',
     'GOOGLE_CLIENT_SECRET',
     'GOOGLE_CLIENT_ID',
@@ -88,8 +82,6 @@ const loadEnvVariables = (): EnvConfig => {
     JWT_ACCESS_EXPIRES: process.env.JWT_ACCESS_EXPIRES as string,
     JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET as string,
     JWT_REFRESH_EXPIRES: process.env.JWT_REFRESH_EXPIRES as string,
-    SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL as string,
-    SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD as string,
     EXPRESS_SESSION_SECRET: process.env.EXPRESS_SESSION_SECRET as string,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET as string,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID as string,

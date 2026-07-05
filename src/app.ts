@@ -1,8 +1,3 @@
-/**
- * @file app.ts
- * @description Express application configuration and middleware setup
- * This file configures all middlewares, authentication strategies, and routes
- */
 
 // Import and initialize Passport authentication strategies (Google OAuth, Local)
 import './app/config/passport';
@@ -27,13 +22,13 @@ const app = express();
  * - resave: Don't save unchanged session data to memory store
  * - saveUninitialized: Don't save uninitialized sessions
  */
-app.use(
-  expressSession({
-    secret: envVars.EXPRESS_SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-  }),
-);
+// app.use(
+//   expressSession({
+//     secret: envVars.EXPRESS_SESSION_SECRET,
+//     resave: false,
+//     saveUninitialized: false,
+//   }),
+// );
 
 /**
  * Initialize Passport Authentication Middleware
@@ -45,7 +40,7 @@ app.use(passport.initialize());
  * Enable Passport Session Support
  * Serializes/deserializes user data to/from sessions
  */
-app.use(passport.session());
+// app.use(passport.session());
 
 /**
  * Parse cookies from incoming requests
