@@ -30,7 +30,7 @@ export interface IUser {
 }
 
 
-export type IUserUpdate = Partial<Pick<IUser, 'name' | 'role' | 'isActive' | 'isBlocked'>>;
+export type IUserUpdate = Partial<IUser>;
 
 
 export interface IUserDocument extends IUser, Document {

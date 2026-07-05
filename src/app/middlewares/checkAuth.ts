@@ -1,12 +1,12 @@
 
 import { NextFunction, Request, Response } from 'express';
-import httpStatus from 'http-status-codes';
 import { JwtPayload } from 'jsonwebtoken';
 import { envVars } from '../config/env';
 import AppError from '../errorHelpers/AppError';
 import { verifyToken } from '../utils/jwt';
 import { User } from '../modules/user/user.models';
 import { validateUserStatus } from '../modules/user/user.utils';
+import { HTTP_STATUS_CODE } from '../utils/HTTP_STATUS_CODE';
 
 
 
@@ -23,7 +23,7 @@ export const checkAuth =
 
       // Validate token presence
       if (!accessToken) {
-        throw new AppError(httpStatus.UNAUTHORIZED, 'No Token Recieved');
+        throw new AppError(HTTP_STATUS_CODE.UNAUTHORIZED, 'No Token Recieved');
       }
 
       /**
@@ -44,7 +44,7 @@ export const checkAuth =
        */
       const isUserExist = await User.findOne({ email: verifiedToken.email });
       if (!isUserExist) {
-        throw new AppError(httpStatus.BAD_REQUEST, 'User does not exist');
+        throw new AppError(HTTP_STATUS_CODE.BAD_REQUEST, 'User does not exist');
       }
 
       /**
@@ -64,7 +64,7 @@ export const checkAuth =
        */
       if (!authRoles.includes(verifiedToken.role)) {
         throw new AppError(
-          httpStatus.FORBIDDEN,
+          HTTP_STATUS_CODE.FORBIDDEN,
           'You are not permitted to view this route!!!',
         );
       }

@@ -16,7 +16,7 @@ export const validateUserStatus = (user: IUser) => {
     throw new AppError(HTTP_STATUS_CODE.FORBIDDEN, 'This user account is not active');
   }
 
-  if (!user.isVerified) {
-    throw new AppError(HTTP_STATUS_CODE.FORBIDDEN, 'This user account is not verified');
-  }
+//   if (!user.isVerified) {
+//     throw new AppError(HTTP_STATUS_CODE.FORBIDDEN, 'This user account is not verified');
+//   }
 };

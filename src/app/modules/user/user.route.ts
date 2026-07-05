@@ -13,8 +13,6 @@ router.post(
   userController.createUser,
 );
 
-router.get('/', checkAuth(UserRole.ADMIN), userController.getAllUsers);
-
 router.get(
   '/:id',
   checkAuth(UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE),
@@ -29,5 +27,7 @@ router.patch(
 );
 
 router.delete('/:id', checkAuth(UserRole.ADMIN), userController.deleteUser);
+
+router.get('/', checkAuth(UserRole.ADMIN), userController.getAllUsers);
 
 export const userRoutes = router;

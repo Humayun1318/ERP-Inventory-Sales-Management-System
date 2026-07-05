@@ -105,8 +105,15 @@ const updateUser = async (
   // Only Admin can change role / isActive / isBlocked
   if (requesterRole !== UserRole.ADMIN) {
     delete payload.role;
-    delete payload.isActive;
     delete payload.isBlocked;
+  }
+
+  if(requesterRole == UserRole.ADMIN) {
+    delete payload?.isVerified; // Admin cannot change isVerified status
+    delete payload?.auths; // Admin cannot change auths
+    delete payload?.password; // Admin cannot change password
+    delete payload?.email; // Admin cannot change email
+    delete payload?.name; // Admin cannot change name
   }
 
   Object.assign(user, payload);
