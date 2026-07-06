@@ -21,13 +21,13 @@ const app = express();
  * - resave: Don't save unchanged session data to memory store
  * - saveUninitialized: Don't save uninitialized sessions
  */
-// app.use(
-//   expressSession({
-//     secret: envVars.EXPRESS_SESSION_SECRET,
-//     resave: false,
-//     saveUninitialized: false,
-//   }),
-// );
+app.use(
+  expressSession({
+    secret: envVars.EXPRESS_SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
 
 /**
  * Initialize Passport Authentication Middleware
