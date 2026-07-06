@@ -5,17 +5,19 @@ export interface IProduct {
     name: string;
     sku: string;
     category: string;
+    images: string[];
     purchasePrice: number;
     sellingPrice: number;
     stockQuantity: number;
     isDeleted: boolean;
+    deletedImageUrls?: string[];
     createdAt?: Date;
     updatedAt?: Date;
 }
 
 export type IProductCreate = Pick<
     IProduct,
-    'name' | 'sku' | 'category' | 'purchasePrice' | 'sellingPrice' | 'stockQuantity'
+    'name' | 'sku' | 'category' | 'purchasePrice' | 'sellingPrice' | 'stockQuantity' | 'images' | 'deletedImageUrls'
 >;
 
 export type IProductUpdate = Partial<IProductCreate>;

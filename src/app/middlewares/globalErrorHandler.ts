@@ -1,9 +1,3 @@
-/**
- * @file globalErrorHandler.ts
- * @description Express error handling middleware for centralized error management
- * This middleware catches all errors thrown in route handlers and error handlers
- * Normalizes various error types (MongoDB, Zod, Validation, etc.) into consistent responses
- */
 
 import { NextFunction, Request, Response } from 'express';
 import { envVars } from '../config/env';
@@ -13,6 +7,7 @@ import { handleCastError } from '../helpers/handleCastError';
 import { handlerZodError } from '../helpers/handlerZodError';
 import { handlerValidationError } from '../helpers/handlerValidationError';
 import AppError from '../errorHelpers/AppError';
+import { deleteImageFromCLoudinary } from '../config/cloudinary.config';
 
 /**
  * Global Error Handler Middleware
@@ -43,6 +38,15 @@ export const globalErrorHandler = async (
   let statusCode = 500; // Default to server error
   let message = 'Something Went Wrong!!'; // Default error message
 
+    if (req.file) {
+        await deleteImageFromCLoudinary(req.file.path)
+    }
+
+    if (req.files && Array.isArray(req.files) && req.files.length) {
+        const imageUrls = (req.files as Express.Multer.File[]).map(file => file.path)
+
+        await Promise.all(imageUrls.map(url => deleteImageFromCLoudinary(url)))
+    }
   /**
    * Error Type Handling: Duplicate Database Entry
    * MongoDB returns error code 11000 when a unique field has duplicate values

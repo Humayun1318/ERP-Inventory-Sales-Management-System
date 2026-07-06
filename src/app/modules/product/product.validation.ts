@@ -21,6 +21,8 @@ export const createProductValidationSchema = z
     purchasePrice: z.number().nonnegative('Purchase price cannot be negative'),
     sellingPrice: z.number().nonnegative('Selling price cannot be negative'),
     stockQuantity: z.number().int().nonnegative('Stock quantity cannot be negative'),
+    images: z.array(z.url()).optional(),
+    deletedImageUrls: z.array(z.url()).optional(),
   })
   .strict();
 

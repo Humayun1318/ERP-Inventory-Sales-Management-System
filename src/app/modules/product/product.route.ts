@@ -4,6 +4,7 @@ import { validateQuery, validateRequest } from '../../middlewares/validateReques
 import { productController } from './product.controller';
 import { UserRole } from '../user/user.constants';
 import { createProductValidationSchema, getProductsQuerySchema, updateProductValidationSchema } from './product.validation';
+import { multerUpload } from '../../config/multer.config';
 
 const router = Router();
 
@@ -11,6 +12,7 @@ const router = Router();
 router.post(
     '/',
     checkAuth(UserRole.ADMIN, UserRole.MANAGER),
+     multerUpload.array("files"),
     validateRequest(createProductValidationSchema),
     productController.createProduct,
 );
@@ -31,6 +33,7 @@ router.get(
 router.patch(
     '/:id',
     checkAuth(UserRole.ADMIN, UserRole.MANAGER),
+    multerUpload.array("files"),
     validateRequest(updateProductValidationSchema),
     productController.updateProduct,
 );

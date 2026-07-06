@@ -12,6 +12,8 @@ const productSchema = new Schema<IProductDocument, IProductModel>(
       uppercase: true,
     },
     category: { type: String, required: true, trim: true },
+    images: { type: [String], default: [] },
+    deletedImageUrls: { type: [String], default: [] },
     purchasePrice: { type: Number, required: true, min: 0 },
     sellingPrice: { type: Number, required: true, min: 0 },
     stockQuantity: { type: Number, required: true, min: 0, default: 0 },

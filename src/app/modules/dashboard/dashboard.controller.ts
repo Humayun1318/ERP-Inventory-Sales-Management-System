@@ -1,17 +1,20 @@
-import { Request, Response } from 'express';
+
 import catchAsync from '../../utils/catchAsync';
+import { HTTP_STATUS_CODE } from '../../utils/HTTP_STATUS_CODE';
+import { sendResponse } from '../../utils/sendResponse';
 import { dashboardService } from './dashboard.service';
 
-const createDashboard = catchAsync(async (req: Request, res: Response) => {});
-const getAllDashboard = catchAsync(async (req: Request, res: Response) => {});
-const getDashboardById = catchAsync(async (req: Request, res: Response) => {});
-const updateDashboard = catchAsync(async (req: Request, res: Response) => {});
-const deleteDashboard = catchAsync(async (req: Request, res: Response) => {});
+const getSummary = catchAsync(async (req, res) => {
+  const result = await dashboardService.getSummary();
+
+  sendResponse(res, {
+    statusCode: HTTP_STATUS_CODE.OK,
+    success: true,
+    message: 'Dashboard summary retrieved successfully',
+    data: result,
+  });
+});
 
 export const dashboardController = {
-  createDashboard,
-  getAllDashboard,
-  getDashboardById,
-  updateDashboard,
-  deleteDashboard,
+  getSummary,
 };

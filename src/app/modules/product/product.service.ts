@@ -5,6 +5,7 @@ import { Product } from './product.models';
 import { HTTP_STATUS_CODE } from '../../utils/HTTP_STATUS_CODE';
 import { QueryBuilder } from '../../builder/QueryBuilder';
 import AppError from '../../errorHelpers/AppError';
+import { deleteImageFromCLoudinary } from '../../config/cloudinary.config';
 
 const createProduct = async (payload: IProductCreate) => {
   const skuTaken = await Product.isSkuTaken(payload.sku);
@@ -77,8 +78,27 @@ const updateProduct = async (id: string, payload: IProductUpdate) => {
     }
   }
 
+  if (payload.images && payload.images.length > 0 && product.images && product.images.length > 0) {
+    payload.images = [...payload.images, ...product.images]
+  }
+
+  if (payload.deletedImageUrls && payload.deletedImageUrls.length > 0 && product.images && product.images.length > 0) {
+
+    const restDBImages = product.images.filter(imageUrl => !payload.deletedImageUrls?.includes(imageUrl))
+
+    const updatedPayloadImages = (payload.images || [])
+      .filter(imageUrl => !payload.deletedImageUrls?.includes(imageUrl))
+      .filter(imageUrl => !restDBImages.includes(imageUrl))
+
+    payload.images = [...restDBImages, ...updatedPayloadImages]
+  }
+
   Object.assign(product, payload);
   await product.save();
+
+  if (payload.deletedImageUrls && payload.deletedImageUrls.length > 0 && product.images && product.images.length > 0) {
+    await Promise.all(payload.deletedImageUrls.map(url => deleteImageFromCLoudinary(url)))
+  }
 
   return product;
 };
