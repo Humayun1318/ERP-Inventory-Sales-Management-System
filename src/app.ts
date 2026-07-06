@@ -53,6 +53,8 @@ app.use(cookieParser());
  */
 app.use(express.json());
 
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bodies
+
 /**
  * Configure Cross-Origin Resource Sharing (CORS)
  * Purpose: Allow the frontend application to make cross-origin requests to this API
