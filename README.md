@@ -122,7 +122,7 @@ src/
 
 ## Database Design
 
-*(See `schema.dbml` — paste directly into [dbdiagram.io](https://dbdiagram.io) for the visual ERD.)*
+*(See `schema.dbml` — paste directly into [dbdiagram.io](https://dbdiagram.io/d/erpIms-6a4bfb584ac62e474c41160f) for the visual ERD.)*
 
 ### User
 The core account record. Supports **two login providers** simultaneously through an embedded `auths[]` array (`{ provider: LOCAL | GOOGLE, providerId }`), so a single user can, for example, register locally and later link Google without creating a duplicate account. `role` gates authorization. `isVerified` / `isActive` / `isBlocked` / `isDeleted` are checked on every authenticated request (`validateUserStatus`) so a suspended or soft-deleted account is rejected immediately, even with a valid JWT.
