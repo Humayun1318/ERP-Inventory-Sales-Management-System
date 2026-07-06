@@ -4,6 +4,8 @@ import { Router } from 'express';
 import { userRoutes } from '../modules/user/user.route';
 import { authRoutes } from '../modules/auth/auth.route';
 import { productRoutes } from '../modules/product/product.route';
+import { customerRoutes } from '../modules/customer/customer.route';
+import { saleRoutes } from '../modules/sale/sale.route';
 
 
 // Initialize Express router for API routes
@@ -33,6 +35,16 @@ const moduleRoutes = [
     path: '/products',
     route: productRoutes,
   },
+  {
+    // Customer endpoints: /api/v1/customers
+    path: '/customers',
+    route: customerRoutes,
+  },
+  {
+    // Sale endpoints: /api/v1/sales
+    path: '/sales',
+    route: saleRoutes,
+  }
 ];
 
 /**
