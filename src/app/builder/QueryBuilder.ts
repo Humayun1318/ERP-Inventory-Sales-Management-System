@@ -10,6 +10,12 @@ export const excludeField = [
   'minAmount',
   'maxAmount',
   'includeSystem',
+  'minSellingPrice',
+  'maxSellingPrice',
+  'minPurchasePrice',
+  'maxPurchasePrice',
+  'minStock',
+  'maxStock',
 ];
 export type RangeFilterConfig = {
   field: string; // document field name, e.g. "amount" | "date"
@@ -42,8 +48,10 @@ export class QueryBuilder<T> {
     const rangeQuery: Record<string, Record<string, unknown>> = {};
 
     for (const { field, min, max } of configs) {
+
       const rawMin = min ? this.query[min] : undefined;
       const rawMax = max ? this.query[max] : undefined;
+
 
       if (rawMin == null && rawMax == null) continue;
 

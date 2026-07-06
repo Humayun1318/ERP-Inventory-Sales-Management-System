@@ -26,3 +26,18 @@ export const validateRequest =
         next(error);
       }
     };
+
+
+export const validateQuery =
+  (zodSchema: ZodObject<any>) =>
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // Validate request query against the provided Zod schema
+       await zodSchema.parseAsync(req.query);
+
+      // Validation passed - proceed to next middleware/route handler
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };

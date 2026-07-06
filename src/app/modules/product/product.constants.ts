@@ -1,0 +1,11 @@
+export const PRODUCT_SEARCHABLE_FIELDS = ['name', 'sku', 'category'];
+
+export const PRODUCT_VALIDATION = {
+  NAME_MIN_LENGTH: 2,
+  NAME_MAX_LENGTH: 120,
+  SKU_MIN_LENGTH: 2,
+  SKU_MAX_LENGTH: 40,
+  CATEGORY_MIN_LENGTH: 2,
+  CATEGORY_MAX_LENGTH: 60,
+  LOW_STOCK_THRESHOLD: 5,
+} as const;

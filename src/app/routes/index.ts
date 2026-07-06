@@ -3,6 +3,7 @@
 import { Router } from 'express';
 import { userRoutes } from '../modules/user/user.route';
 import { authRoutes } from '../modules/auth/auth.route';
+import { productRoutes } from '../modules/product/product.route';
 
 
 // Initialize Express router for API routes
@@ -26,6 +27,11 @@ const moduleRoutes = [
     // Authentication endpoints: /api/v1/auth
     path: '/auth',
     route: authRoutes,
+  },
+  {
+    // Product endpoints: /api/v1/products
+    path: '/products',
+    route: productRoutes,
   },
 ];
 
