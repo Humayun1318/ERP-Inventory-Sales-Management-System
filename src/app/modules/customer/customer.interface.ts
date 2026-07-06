@@ -11,7 +11,10 @@ export interface ICustomer {
   updatedAt?: Date;
 }
 
-export type ICustomerCreate = Pick<ICustomer, 'name' | 'phone' | 'email' | 'address'>;
+export type ICustomerCreate = Pick<
+  ICustomer,
+  'name' | 'phone' | 'email' | 'address'
+>;
 
 export type ICustomerUpdate = Partial<ICustomerCreate>;
 
@@ -20,5 +23,8 @@ export interface ICustomerDocument extends ICustomer, Document {
 }
 
 export interface ICustomerModel extends Model<ICustomerDocument> {
-  isPhoneTaken(phone: string, excludeCustomerId?: Types.ObjectId): Promise<boolean>;
+  isPhoneTaken(
+    phone: string,
+    excludeCustomerId?: Types.ObjectId,
+  ): Promise<boolean>;
 }

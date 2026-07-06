@@ -1,4 +1,3 @@
-
 import { JwtPayload } from 'jsonwebtoken';
 
 import { sendResponse } from '../../utils/sendResponse';
@@ -37,7 +36,11 @@ const getSingleUser = catchAsync(async (req, res) => {
   const requesterId = getUserIdFromReq(req);
   const requesterRole = (req.user as JwtPayload).role as UserRole;
 
-  const result = await userService.getSingleUser(req.params.id as string, requesterId, requesterRole);
+  const result = await userService.getSingleUser(
+    req.params.id as string,
+    requesterId,
+    requesterRole,
+  );
 
   sendResponse(res, {
     statusCode: HTTP_STATUS_CODE.OK,

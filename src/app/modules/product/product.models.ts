@@ -37,4 +37,7 @@ productSchema.statics.isSkuTaken = async function (
   return !!product;
 };
 
-export const Product = model<IProductDocument, IProductModel>('Product', productSchema);
+export const Product = model<IProductDocument, IProductModel>(
+  'Product',
+  productSchema,
+);

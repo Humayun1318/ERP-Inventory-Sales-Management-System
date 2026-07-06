@@ -1,6 +1,11 @@
 import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { AuthProvider, IUser, IUserDocument, IUserModel } from './user.interface';
+import {
+  AuthProvider,
+  IUser,
+  IUserDocument,
+  IUserModel,
+} from './user.interface';
 import { envVars } from '../../config/env';
 import { UserRole } from './user.constants';
 
@@ -35,7 +40,11 @@ const userSchema = new Schema<IUserDocument, IUserModel>(
       trim: true,
     },
     password: { type: String, select: false },
-    role: { type: String, enum: Object.values(UserRole), default: UserRole.EMPLOYEE },
+    role: {
+      type: String,
+      enum: Object.values(UserRole),
+      default: UserRole.EMPLOYEE,
+    },
     auths: {
       type: [authEntrySchema],
       required: [true, 'At least one auth provider is required'],
@@ -56,7 +65,10 @@ userSchema.pre('save', async function (next) {
   // Skipping unchanged passwords avoids re-hashing on every profile save.
   if (!this.isModified('password') || !this.password) return next();
 
-  this.password = await bcrypt.hash(this.password, Number(envVars.BCRYPT_SALT_ROUND));
+  this.password = await bcrypt.hash(
+    this.password,
+    Number(envVars.BCRYPT_SALT_ROUND),
+  );
   next();
 });
 
@@ -75,7 +87,9 @@ userSchema.set('toJSON', {
  * comparePassword
  * Requires the document to have been fetched with .select('+password').
  */
-userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
+userSchema.methods.comparePassword = async function (
+  candidatePassword: string,
+): Promise<boolean> {
   if (!this.password) return false;
   return bcrypt.compare(candidatePassword, this.password);
 };
@@ -85,7 +99,11 @@ userSchema.methods.comparePassword = async function (candidatePassword: string):
  * A suspended or soft-deleted account must not be able to log in.
  */
 userSchema.methods.isLoginAllowed = function (): boolean {
-  return this.isActive === true && this.isBlocked === false && this.isDeleted === false;
+  return (
+    this.isActive === true &&
+    this.isBlocked === false &&
+    this.isDeleted === false
+  );
 };
 
 /**
@@ -102,8 +120,12 @@ userSchema.methods.hasAuthProvider = function (
 // ─────────────────────────────────────────────────────────────────────────────
 // Static methods
 // ─────────────────────────────────────────────────────────────────────────────
-userSchema.statics.findByEmail = function (email: string): Promise<IUserDocument | null> {
-  return this.findOne({ email: email.toLowerCase().trim() }).select('+password');
+userSchema.statics.findByEmail = function (
+  email: string,
+): Promise<IUserDocument | null> {
+  return this.findOne({ email: email.toLowerCase().trim() }).select(
+    '+password',
+  );
 };
 
 userSchema.statics.isEmailTaken = async function (

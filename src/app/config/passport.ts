@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import {
@@ -9,7 +10,6 @@ import { User } from '../modules/user/user.models';
 import { envVars } from './env';
 import { AuthProvider } from '../modules/user/user.interface';
 import { UserRole } from '../modules/user/user.constants';
-
 
 passport.use(
   new LocalStrategy(
@@ -48,7 +48,6 @@ passport.use(
           });
         }
 
-
         // ─────────────────────────────
         //  GOOGLE + PASSWORD CONFLICT LOGIC
         // ─────────────────────────────
@@ -86,7 +85,6 @@ passport.use(
   ),
 );
 
-
 passport.use(
   new GoogleStrategy(
     {
@@ -122,8 +120,12 @@ passport.use(
           });
         }
 
-        if (state && state?.role && ![UserRole.EMPLOYEE, UserRole.MANAGER].includes(state.role)) {
-           return done("Invalid role");
+        if (
+          state &&
+          state?.role &&
+          ![UserRole.EMPLOYEE, UserRole.MANAGER].includes(state.role)
+        ) {
+          return done('Invalid role');
         }
 
         const role = state?.role || UserRole.EMPLOYEE;
@@ -167,7 +169,7 @@ passport.use(
         // ─────────────────────────────
         const newUser = await User.create({
           email,
-          name: profile.displayName || "No Name",
+          name: profile.displayName || 'No Name',
           role,
           isVerified: true,
           auths: [

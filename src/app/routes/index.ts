@@ -1,5 +1,3 @@
-
-
 import { Router } from 'express';
 import { userRoutes } from '../modules/user/user.route';
 import { authRoutes } from '../modules/auth/auth.route';
@@ -7,7 +5,6 @@ import { productRoutes } from '../modules/product/product.route';
 import { customerRoutes } from '../modules/customer/customer.route';
 import { saleRoutes } from '../modules/sale/sale.route';
 import { dashboardRoutes } from '../modules/dashboard/dashboard.route';
-
 
 // Initialize Express router for API routes
 export const router = Router();
@@ -50,8 +47,7 @@ const moduleRoutes = [
     // Dashboard endpoints: /api/v1/dashboard
     path: '/dashboard',
     route: dashboardRoutes,
-  }
-
+  },
 ];
 
 /**

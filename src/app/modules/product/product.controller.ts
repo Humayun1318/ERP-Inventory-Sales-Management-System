@@ -1,15 +1,15 @@
-
 import catchAsync from '../../utils/catchAsync';
 import { HTTP_STATUS_CODE } from '../../utils/HTTP_STATUS_CODE';
 import { sendResponse } from '../../utils/sendResponse';
 import { productService } from './product.service';
 
 const createProduct = catchAsync(async (req, res) => {
-
   const payload = {
     ...req.body,
-    images: req.files ? (req.files as Express.Multer.File[]).map((file) => file.path) : [],
-  }
+    images: req.files
+      ? (req.files as Express.Multer.File[]).map((file) => file.path)
+      : [],
+  };
   const result = await productService.createProduct(payload);
 
   sendResponse(res, {
@@ -47,10 +47,19 @@ const getSingleProduct = catchAsync(async (req, res) => {
 const updateProduct = catchAsync(async (req, res) => {
   const payload = {
     ...req.body,
-    images: req.files ? (req.files as Express.Multer.File[]).map((file) => file.path) : [],
-    deletedImageUrls: req.body.deletedImageUrls ? Array.isArray(req.body.deletedImageUrls) ? req.body.deletedImageUrls : [req.body.deletedImageUrls] : [],
+    images: req.files
+      ? (req.files as Express.Multer.File[]).map((file) => file.path)
+      : [],
+    deletedImageUrls: req.body.deletedImageUrls
+      ? Array.isArray(req.body.deletedImageUrls)
+        ? req.body.deletedImageUrls
+        : [req.body.deletedImageUrls]
+      : [],
   };
-  const result = await productService.updateProduct(req.params.id as string, payload);
+  const result = await productService.updateProduct(
+    req.params.id as string,
+    payload,
+  );
 
   sendResponse(res, {
     statusCode: HTTP_STATUS_CODE.OK,

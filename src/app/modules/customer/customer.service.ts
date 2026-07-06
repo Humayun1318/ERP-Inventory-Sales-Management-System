@@ -1,4 +1,3 @@
-
 import { ICustomerCreate, ICustomerUpdate } from './customer.interface';
 import { CUSTOMER_SEARCHABLE_FIELDS } from './customer.constants';
 import { Customer } from './customer.models';
@@ -10,7 +9,10 @@ const createCustomer = async (payload: ICustomerCreate) => {
   const phoneTaken = await Customer.isPhoneTaken(payload.phone);
 
   if (phoneTaken) {
-    throw new AppError(HTTP_STATUS_CODE.CONFLICT, 'A customer with this phone number already exists');
+    throw new AppError(
+      HTTP_STATUS_CODE.CONFLICT,
+      'A customer with this phone number already exists',
+    );
   }
 
   const customer = await Customer.create(payload);
@@ -18,7 +20,10 @@ const createCustomer = async (payload: ICustomerCreate) => {
 };
 
 const getAllCustomers = async (query: Record<string, string>) => {
-  const queryBuilder = new QueryBuilder(Customer.find({ isDeleted: false }), query);
+  const queryBuilder = new QueryBuilder(
+    Customer.find({ isDeleted: false }),
+    query,
+  );
 
   const customersQuery = queryBuilder
     .search(CUSTOMER_SEARCHABLE_FIELDS)

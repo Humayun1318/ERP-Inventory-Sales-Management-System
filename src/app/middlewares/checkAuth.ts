@@ -1,4 +1,3 @@
-
 import { NextFunction, Request, Response } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import { envVars } from '../config/env';
@@ -7,8 +6,6 @@ import { verifyToken } from '../utils/jwt';
 import { User } from '../modules/user/user.models';
 import { validateUserStatus } from '../modules/user/user.utils';
 import { HTTP_STATUS_CODE } from '../utils/HTTP_STATUS_CODE';
-
-
 
 export const checkAuth =
   (...authRoles: string[]) =>

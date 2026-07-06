@@ -1,4 +1,4 @@
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from 'express';
 import { envVars } from '../config/env';
 import { TErrorSources } from '../interfaces/error.types';
@@ -38,15 +38,17 @@ export const globalErrorHandler = async (
   let statusCode = 500; // Default to server error
   let message = 'Something Went Wrong!!'; // Default error message
 
-    if (req.file) {
-        await deleteImageFromCLoudinary(req.file.path)
-    }
+  if (req.file) {
+    await deleteImageFromCLoudinary(req.file.path);
+  }
 
-    if (req.files && Array.isArray(req.files) && req.files.length) {
-        const imageUrls = (req.files as Express.Multer.File[]).map(file => file.path)
+  if (req.files && Array.isArray(req.files) && req.files.length) {
+    const imageUrls = (req.files as Express.Multer.File[]).map(
+      (file) => file.path,
+    );
 
-        await Promise.all(imageUrls.map(url => deleteImageFromCLoudinary(url)))
-    }
+    await Promise.all(imageUrls.map((url) => deleteImageFromCLoudinary(url)));
+  }
   /**
    * Error Type Handling: Duplicate Database Entry
    * MongoDB returns error code 11000 when a unique field has duplicate values

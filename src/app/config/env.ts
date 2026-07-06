@@ -1,4 +1,3 @@
-
 import dotenv from 'dotenv';
 
 // Load environment variables from .env file into process.env
@@ -30,10 +29,10 @@ interface EnvConfig {
   GOOGLE_CLIENT_SECRET: string;
   GOOGLE_CALLBACK_URL: string;
   CLOUDINARY: {
-        CLOUDINARY_CLOUD_NAME: string;
-        CLOUDINARY_API_KEY: string;
-        CLOUDINARY_API_SECRET: string;
-    };
+    CLOUDINARY_CLOUD_NAME: string;
+    CLOUDINARY_API_KEY: string;
+    CLOUDINARY_API_SECRET: string;
+  };
 }
 
 /**

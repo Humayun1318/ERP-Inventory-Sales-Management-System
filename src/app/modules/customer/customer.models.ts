@@ -24,4 +24,7 @@ customerSchema.statics.isPhoneTaken = async function (
   return !!customer;
 };
 
-export const Customer = model<ICustomerDocument, ICustomerModel>('Customer', customerSchema);
+export const Customer = model<ICustomerDocument, ICustomerModel>(
+  'Customer',
+  customerSchema,
+);

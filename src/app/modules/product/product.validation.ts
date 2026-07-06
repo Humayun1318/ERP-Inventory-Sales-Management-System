@@ -20,15 +20,17 @@ export const createProductValidationSchema = z
       .trim(),
     purchasePrice: z.number().nonnegative('Purchase price cannot be negative'),
     sellingPrice: z.number().nonnegative('Selling price cannot be negative'),
-    stockQuantity: z.number().int().nonnegative('Stock quantity cannot be negative'),
+    stockQuantity: z
+      .number()
+      .int()
+      .nonnegative('Stock quantity cannot be negative'),
     images: z.array(z.url()).optional(),
     deletedImageUrls: z.array(z.url()).optional(),
   })
   .strict();
 
-export const updateProductValidationSchema = createProductValidationSchema.partial();
-
-
+export const updateProductValidationSchema =
+  createProductValidationSchema.partial();
 
 export const getProductsQuerySchema = z
   .strictObject(
@@ -73,25 +75,28 @@ export const getProductsQuerySchema = z
       sort: z
         .string()
         .optional()
-        .refine((value) => {
-          if (!value) return true;
+        .refine(
+          (value) => {
+            if (!value) return true;
 
-          const allowed = [
-            'name',
-            'category',
-            'sellingPrice',
-            'purchasePrice',
-            'stockQuantity',
-            'createdAt',
-          ];
+            const allowed = [
+              'name',
+              'category',
+              'sellingPrice',
+              'purchasePrice',
+              'stockQuantity',
+              'createdAt',
+            ];
 
-          return value.split(',').every((field) => {
-            const clean = field.startsWith('-') ? field.slice(1) : field;
-            return allowed.includes(clean);
-          });
-        }, {
-          message: 'Invalid sort field.',
-        }),
+            return value.split(',').every((field) => {
+              const clean = field.startsWith('-') ? field.slice(1) : field;
+              return allowed.includes(clean);
+            });
+          },
+          {
+            message: 'Invalid sort field.',
+          },
+        ),
 
       //-----------------------------
       // Field Selection
@@ -119,8 +124,7 @@ export const getProductsQuerySchema = z
       data.minSellingPrice <= data.maxSellingPrice,
     {
       path: ['minSellingPrice'],
-      message:
-        'minSellingPrice must be less than or equal to maxSellingPrice.',
+      message: 'minSellingPrice must be less than or equal to maxSellingPrice.',
     },
   )
 

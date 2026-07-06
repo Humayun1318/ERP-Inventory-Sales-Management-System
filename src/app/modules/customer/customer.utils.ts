@@ -8,9 +8,10 @@ export const assertCustomerExists = async (
   customerId: string,
   session?: ClientSession,
 ): Promise<ICustomerDocument> => {
-  const customer = await Customer.findOne({ _id: customerId, isDeleted: false }).session(
-    session ?? null,
-  );
+  const customer = await Customer.findOne({
+    _id: customerId,
+    isDeleted: false,
+  }).session(session ?? null);
 
   if (!customer) {
     throw new AppError(HTTP_STATUS_CODE.NOT_FOUND, 'Customer not found');

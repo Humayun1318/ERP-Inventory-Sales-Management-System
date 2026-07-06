@@ -1,4 +1,3 @@
-
 import catchAsync from '../../utils/catchAsync';
 import { HTTP_STATUS_CODE } from '../../utils/HTTP_STATUS_CODE';
 import { sendResponse } from '../../utils/sendResponse';

@@ -2,7 +2,10 @@ import { Router } from 'express';
 import { checkAuth } from '../../middlewares/checkAuth';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { customerController } from './customer.controller';
-import { createCustomerZodSchema, updateCustomerZodSchema } from './customer.validation';
+import {
+  createCustomerZodSchema,
+  updateCustomerZodSchema,
+} from './customer.validation';
 import { UserRole } from '../user/user.constants';
 
 const router = Router();
@@ -16,9 +19,17 @@ router.post(
   customerController.createCustomer,
 );
 
-router.get('/', checkAuth(UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE), customerController.getAllCustomers);
+router.get(
+  '/',
+  checkAuth(UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE),
+  customerController.getAllCustomers,
+);
 
-router.get('/:id', checkAuth(UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE), customerController.getSingleCustomer);
+router.get(
+  '/:id',
+  checkAuth(UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE),
+  customerController.getSingleCustomer,
+);
 
 router.patch(
   '/:id',

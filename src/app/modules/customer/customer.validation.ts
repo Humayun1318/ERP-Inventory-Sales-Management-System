@@ -14,7 +14,11 @@ export const createCustomerZodSchema = z
       .max(CUSTOMER_VALIDATION.PHONE_MAX_LENGTH)
       .trim(),
     email: z.string().email().trim().optional(),
-    address: z.string().max(CUSTOMER_VALIDATION.ADDRESS_MAX_LENGTH).trim().optional(),
+    address: z
+      .string()
+      .max(CUSTOMER_VALIDATION.ADDRESS_MAX_LENGTH)
+      .trim()
+      .optional(),
   })
   .strict();
 

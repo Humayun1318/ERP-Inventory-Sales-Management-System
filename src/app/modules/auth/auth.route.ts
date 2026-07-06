@@ -6,7 +6,6 @@ import { checkAuth } from '../../middlewares/checkAuth';
 import passport from 'passport';
 import { UserRole } from '../user/user.constants';
 
-
 const router = Router();
 
 // Authentication routes________________________________
@@ -48,11 +47,7 @@ router.get(
   },
 );
 
-router.get(
-  '/google/callback',
-  authController.googleCallbackController,
-);
+router.get('/google/callback', authController.googleCallbackController);
 //________________________________________________________
-
 
 export const authRoutes = router;

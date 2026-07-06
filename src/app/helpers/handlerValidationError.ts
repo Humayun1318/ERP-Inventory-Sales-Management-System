@@ -1,8 +1,4 @@
-/**
- * @file handlerValidationError.ts
- * @description Mongoose schema validation error handler
- * Converts MongoDB/Mongoose validation errors into standardized error responses
- */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import mongoose from 'mongoose';
 import {

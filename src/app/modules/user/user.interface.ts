@@ -1,7 +1,6 @@
 import { Document, Model, Types } from 'mongoose';
 import { UserRole } from './user.constants';
 
-
 // authProvider types
 export enum AuthProvider {
   LOCAL = 'local',
@@ -29,9 +28,7 @@ export interface IUser {
   updatedAt?: Date;
 }
 
-
 export type IUserUpdate = Partial<IUser>;
-
 
 export interface IUserDocument extends IUser, Document {
   _id: Types.ObjectId;

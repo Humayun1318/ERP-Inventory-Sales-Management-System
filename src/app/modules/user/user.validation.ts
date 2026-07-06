@@ -7,7 +7,8 @@ import { USER_VALIDATION, UserRole } from './user.constants';
 
 export const nameSchema = z
   .string({
-    error: (issue) => (issue.input === undefined ? 'Name is required' : 'Name must be a string'),
+    error: (issue) =>
+      issue.input === undefined ? 'Name is required' : 'Name must be a string',
   })
   .trim()
   .min(USER_VALIDATION.NAME_MIN_LENGTH, {
@@ -22,7 +23,10 @@ export const nameSchema = z
 // ---------------------------------------------------------------------------
 export const emailValidationSchema = z
   .string({
-    error: (issue) => (issue.input === undefined ? 'Email is required' : 'Email must be a string'),
+    error: (issue) =>
+      issue.input === undefined
+        ? 'Email is required'
+        : 'Email must be a string',
   })
   .trim()
   .superRefine((val, ctx) => {
@@ -43,7 +47,9 @@ export const emailValidationSchema = z
 export const passwordValidationSchema = z
   .string({
     error: (issue) =>
-      issue.input === undefined ? 'Password is required' : 'Password must be a string',
+      issue.input === undefined
+        ? 'Password is required'
+        : 'Password must be a string',
   })
   .min(USER_VALIDATION.PASSWORD_MIN_LENGTH, {
     message: `Password must be at least ${USER_VALIDATION.PASSWORD_MIN_LENGTH} characters`,
@@ -61,8 +67,7 @@ export const passwordValidationSchema = z
     message: 'Password must contain at least one number',
   });
 
-
-  // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 // Register Schema
 // ---------------------------------------------------------------------------
 export const registerSchema = z.object({

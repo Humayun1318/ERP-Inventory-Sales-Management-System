@@ -17,7 +17,8 @@ const saleSchema = new Schema<ISaleDocument, ISaleModel>(
       type: [saleProductSchema],
       required: true,
       validate: {
-        validator: (value: unknown[]) => Array.isArray(value) && value.length > 0,
+        validator: (value: unknown[]) =>
+          Array.isArray(value) && value.length > 0,
         message: 'A sale must contain at least one product',
       },
     },

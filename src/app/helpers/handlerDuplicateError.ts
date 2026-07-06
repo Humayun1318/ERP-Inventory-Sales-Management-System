@@ -1,8 +1,4 @@
-/**
- * @file handlerDuplicateError.ts
- * @description MongoDB duplicate key error handler
- * Processes MongoDB error code 11000 (unique constraint violation) into readable error messages
- */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { TGenericErrorResponse } from '../interfaces/error.types';
 

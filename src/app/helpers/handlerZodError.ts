@@ -1,8 +1,4 @@
-/**
- * @file handlerZodError.ts
- * @description Zod validation error handler
- * Converts Zod validation errors into standardized error responses
- */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {
   TErrorSources,

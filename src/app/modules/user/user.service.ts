@@ -1,4 +1,3 @@
-
 import AppError from '../../errorHelpers/AppError';
 import { User } from './user.models';
 import { AuthProvider, IUser, IUserUpdate } from './user.interface';
@@ -72,7 +71,10 @@ const getSingleUser = async (
   requesterRole: UserRole,
 ) => {
   if (requesterRole !== UserRole.ADMIN && requesterId !== targetId) {
-    throw new AppError(HTTP_STATUS_CODE.FORBIDDEN, 'You are not allowed to view this user');
+    throw new AppError(
+      HTTP_STATUS_CODE.FORBIDDEN,
+      'You are not allowed to view this user',
+    );
   }
 
   const user = await User.findOne({ _id: targetId, isDeleted: false }).lean();
@@ -99,7 +101,10 @@ const updateUser = async (
   const isSelf = requesterId === targetId;
 
   if (!isSelf && requesterRole !== UserRole.ADMIN) {
-    throw new AppError(HTTP_STATUS_CODE.FORBIDDEN, 'You are not allowed to update this user');
+    throw new AppError(
+      HTTP_STATUS_CODE.FORBIDDEN,
+      'You are not allowed to update this user',
+    );
   }
 
   // Only Admin can change role / isActive / isBlocked
@@ -108,7 +113,7 @@ const updateUser = async (
     delete payload.isBlocked;
   }
 
-  if(requesterRole == UserRole.ADMIN) {
+  if (requesterRole == UserRole.ADMIN) {
     delete payload?.isVerified; // Admin cannot change isVerified status
     delete payload?.auths; // Admin cannot change auths
     delete payload?.password; // Admin cannot change password

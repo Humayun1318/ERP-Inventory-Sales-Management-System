@@ -29,7 +29,10 @@ const createSale = async (payload: ICreateSalePayload, createdBy: string) => {
     for (const item of payload.products) {
       // Rule 3 (quantity part) — defensive re-check even though zod enforces it
       if (item.quantity <= 0) {
-        throw new AppError(HTTP_STATUS_CODE.BAD_REQUEST, 'Quantity must be greater than 0');
+        throw new AppError(
+          HTTP_STATUS_CODE.BAD_REQUEST,
+          'Quantity must be greater than 0',
+        );
       }
 
       // Rule 3/4 — Product must exist and not be soft-deleted
@@ -90,12 +93,17 @@ const getAllSales = async (query: Record<string, string>) => {
 
   const salesQuery = queryBuilder
     .filter()
-    .rangeFilter([{ field: SALE_DATE_RANGE_FIELD, min: 'startDate', max: 'endDate' }])
+    .rangeFilter([
+      { field: SALE_DATE_RANGE_FIELD, min: 'startDate', max: 'endDate' },
+    ])
     .sort()
     .fields()
     .paginate();
 
-  const [result, meta] = await Promise.all([salesQuery.build(), queryBuilder.getMeta()]);
+  const [result, meta] = await Promise.all([
+    salesQuery.build(),
+    queryBuilder.getMeta(),
+  ]);
 
   return { result, meta };
 };

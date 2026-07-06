@@ -48,10 +48,8 @@ export class QueryBuilder<T> {
     const rangeQuery: Record<string, Record<string, unknown>> = {};
 
     for (const { field, min, max } of configs) {
-
       const rawMin = min ? this.query[min] : undefined;
       const rawMax = max ? this.query[max] : undefined;
-
 
       if (rawMin == null && rawMax == null) continue;
 
@@ -78,7 +76,9 @@ export class QueryBuilder<T> {
   search(searchableField: string[]): this {
     const searchTerm = this.query.searchTerm || '';
     const searchQuery = {
-      $or: searchableField.map((field) => ({ [field]: { $regex: searchTerm, $options: 'i' } })),
+      $or: searchableField.map((field) => ({
+        [field]: { $regex: searchTerm, $options: 'i' },
+      })),
     };
     this.modelQuery = this.modelQuery.find(searchQuery);
     return this;

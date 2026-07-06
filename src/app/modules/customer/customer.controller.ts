@@ -1,4 +1,3 @@
-
 import catchAsync from '../../utils/catchAsync';
 import { HTTP_STATUS_CODE } from '../../utils/HTTP_STATUS_CODE';
 import { sendResponse } from '../../utils/sendResponse';
@@ -29,7 +28,9 @@ const getAllCustomers = catchAsync(async (req, res) => {
 });
 
 const getSingleCustomer = catchAsync(async (req, res) => {
-  const result = await customerService.getSingleCustomer(req.params.id as string);
+  const result = await customerService.getSingleCustomer(
+    req.params.id as string,
+  );
 
   sendResponse(res, {
     statusCode: HTTP_STATUS_CODE.OK,
@@ -40,7 +41,10 @@ const getSingleCustomer = catchAsync(async (req, res) => {
 });
 
 const updateCustomer = catchAsync(async (req, res) => {
-  const result = await customerService.updateCustomer(req.params.id as string, req.body);
+  const result = await customerService.updateCustomer(
+    req.params.id as string,
+    req.body,
+  );
 
   sendResponse(res, {
     statusCode: HTTP_STATUS_CODE.OK,

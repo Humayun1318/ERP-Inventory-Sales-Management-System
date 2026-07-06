@@ -1,12 +1,9 @@
 import AppError from '../../errorHelpers/AppError';
 import { HTTP_STATUS_CODE } from '../../utils/HTTP_STATUS_CODE';
 
-import {
-  createNewAccessTokenByRefreshToken,
-} from '../../utils/userTokens';
+import { createNewAccessTokenByRefreshToken } from '../../utils/userTokens';
 import { AuthProvider, IUser } from '../user/user.interface';
 import { User } from '../user/user.models';
-
 
 // const createAuth = async (payload: Partial<IUser>) => {
 //   const { email, password } = payload;
@@ -71,7 +68,10 @@ const changePassword = async (
 
   const isOldPasswordMatch = await user.comparePassword(oldPassword);
   if (!isOldPasswordMatch) {
-    throw new AppError(HTTP_STATUS_CODE.UNAUTHORIZED, 'Old Password does not match');
+    throw new AppError(
+      HTTP_STATUS_CODE.UNAUTHORIZED,
+      'Old Password does not match',
+    );
   }
 
   user.password = newPassword;
@@ -79,7 +79,6 @@ const changePassword = async (
   await user.save();
   return;
 };
-
 
 export const authService = {
   getNewAccessTokenUsingRefreshToken,

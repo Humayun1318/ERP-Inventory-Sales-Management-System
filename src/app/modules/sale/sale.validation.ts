@@ -2,7 +2,6 @@ import { z } from 'zod';
 import { Types } from 'mongoose';
 import { mongoIdSchema } from '../../shared/schemas/mongoIdSchema';
 
-
 const saleProductItemSchema = z
   .object({
     product: mongoIdSchema,
@@ -13,6 +12,8 @@ const saleProductItemSchema = z
 export const createSaleValidationSchema = z
   .object({
     customer: mongoIdSchema,
-    products: z.array(saleProductItemSchema).min(1, 'At least one product is required'),
+    products: z
+      .array(saleProductItemSchema)
+      .min(1, 'At least one product is required'),
   })
   .strict();

@@ -15,9 +15,10 @@ export const assertProductExists = async (
   productId: string,
   session?: ClientSession,
 ): Promise<IProductDocument> => {
-  const product = await Product.findOne({ _id: productId, isDeleted: false }).session(
-    session ?? null,
-  );
+  const product = await Product.findOne({
+    _id: productId,
+    isDeleted: false,
+  }).session(session ?? null);
 
   if (!product) {
     throw new AppError(HTTP_STATUS_CODE.NOT_FOUND, 'Product not found');

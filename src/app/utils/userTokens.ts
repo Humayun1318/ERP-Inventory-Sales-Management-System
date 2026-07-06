@@ -1,12 +1,11 @@
 import { JwtPayload } from 'jsonwebtoken';
 import { envVars } from '../config/env';
-import {  IUser } from '../modules/user/user.interface';
+import { IUser } from '../modules/user/user.interface';
 import { generateToken, verifyToken } from './jwt';
 import { User } from '../modules/user/user.models';
 import AppError from '../errorHelpers/AppError';
 import httpStatus from 'http-status-codes';
 import { validateUserStatus } from '../modules/user/user.utils';
-
 
 export const createUserTokens = (
   user: Pick<IUser, '_id' | 'email' | 'role'>,

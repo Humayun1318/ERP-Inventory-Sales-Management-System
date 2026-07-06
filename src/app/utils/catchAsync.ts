@@ -1,8 +1,4 @@
-/**
- * @file catchAsync.ts
- * @description Async error handling wrapper for Express route handlers
- * This utility wraps async route handlers to automatically catch promise rejections
- */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { NextFunction, Request, Response } from 'express';
 

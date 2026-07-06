@@ -1,4 +1,3 @@
-
 import { Customer } from '../customer/customer.models';
 import { Product } from '../product/product.models';
 import { lowStockFilter } from '../product/product.utils';

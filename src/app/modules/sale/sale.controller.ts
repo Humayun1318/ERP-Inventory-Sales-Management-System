@@ -1,4 +1,3 @@
-
 import { sendResponse } from '../../utils/sendResponse';
 import { getUserIdFromReq } from '../../utils/getUserIdFromReq';
 import { saleService } from './sale.service';
@@ -18,7 +17,9 @@ const createSale = catchAsync(async (req, res) => {
 });
 
 const getAllSales = catchAsync(async (req, res) => {
-  const { result, meta } = await saleService.getAllSales(req.query as Record<string, string>);
+  const { result, meta } = await saleService.getAllSales(
+    req.query as Record<string, string>,
+  );
 
   sendResponse(res, {
     statusCode: HTTP_STATUS_CODE.OK,
