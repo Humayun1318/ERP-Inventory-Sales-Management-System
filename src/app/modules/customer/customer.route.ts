@@ -16,9 +16,9 @@ router.post(
   customerController.createCustomer,
 );
 
-router.get('/', checkAuth(UserRole.ADMIN, UserRole.MANAGER), customerController.getAllCustomers);
+router.get('/', checkAuth(UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE), customerController.getAllCustomers);
 
-router.get('/:id', checkAuth(UserRole.ADMIN, UserRole.MANAGER), customerController.getSingleCustomer);
+router.get('/:id', checkAuth(UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE), customerController.getSingleCustomer);
 
 router.patch(
   '/:id',
