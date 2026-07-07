@@ -340,7 +340,7 @@ The application extracts the secure URL and stores it in MongoDB (Product.imageU
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/Humayun1318/<repo-name>.git
+git clone https://github.com/Humayun1318/ERP-Inventory-Sales-Management-System.git
 cd <repo-name>
 
 # 2. Install dependencies
