@@ -19,6 +19,18 @@ const createUser = catchAsync(async (req, res) => {
   });
 });
 
+const getMe = catchAsync(async (req, res) => {
+  const userId = getUserIdFromReq(req);
+  const result = await userService.getMe(userId);
+
+  sendResponse(res, {
+    statusCode: HTTP_STATUS_CODE.OK,
+    success: true,
+    message: 'Profile retrieved successfully',
+    data: result,
+  });
+});
+
 const getAllUsers = catchAsync(async (req, res) => {
   const { result, meta } = await userService.getAllUsers(
     req.query as Record<string, string>,
@@ -82,6 +94,7 @@ const deleteUser = catchAsync(async (req, res) => {
 
 export const userController = {
   createUser,
+  getMe,
   getAllUsers,
   getSingleUser,
   updateUser,

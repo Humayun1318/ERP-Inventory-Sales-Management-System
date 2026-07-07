@@ -13,6 +13,8 @@ router.post(
   userController.createUser,
 );
 
+router.get('/me', checkAuth(UserRole.MANAGER, UserRole.ADMIN, UserRole.EMPLOYEE), userController.getMe);
+
 router.get(
   '/:id',
   checkAuth(UserRole.ADMIN, UserRole.MANAGER, UserRole.EMPLOYEE),

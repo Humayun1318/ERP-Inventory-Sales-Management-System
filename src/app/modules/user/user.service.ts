@@ -1,6 +1,6 @@
 import AppError from '../../errorHelpers/AppError';
 import { User } from './user.models';
-import { AuthProvider, IUser, IUserUpdate } from './user.interface';
+import { AuthProvider, IUser, IUserDocument, IUserUpdate } from './user.interface';
 import { USER_SEARCHABLE_FIELDS, UserRole } from './user.constants';
 import { QueryBuilder } from '../../builder/QueryBuilder';
 import { HTTP_STATUS_CODE } from '../../utils/HTTP_STATUS_CODE';
@@ -44,6 +44,23 @@ const createUser = async (payload: IUser) => {
 
   // create user
   const user = await User.create(payload);
+  return user;
+};
+
+const getMe = async (userId: string): Promise<IUserDocument> => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new AppError(HTTP_STATUS_CODE.NOT_FOUND, 'User not found');
+  }
+
+  if (user?.isDeleted) {
+    throw new AppError(
+      HTTP_STATUS_CODE.BAD_REQUEST,
+      'Your account has been deleted. please contact support.',
+    );
+  }
+
   return user;
 };
 
@@ -142,6 +159,7 @@ const deleteUser = async (targetId: string) => {
 
 export const userService = {
   createUser,
+  getMe,
   getAllUsers,
   getSingleUser,
   updateUser,
